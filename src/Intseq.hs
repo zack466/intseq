@@ -75,6 +75,7 @@ primes :: [Integer]
 primes = sieve [2..]
     where
         -- Sieve of Erastothenes
+        -- Sidenote: this is very inefficient
         sieve :: [Integer] -> [Integer]
         sieve seq = head seq : filter (\x -> x `mod` head seq /= 0) (sieve $ tail seq)
 

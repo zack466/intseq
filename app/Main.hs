@@ -1,4 +1,4 @@
 import Intseq
 
 main = do
-    print (take 10 catalan)
+    print (take 25 fibonacci)
