@@ -18,37 +18,59 @@ natural = [1..]
 natural0 :: [Integer]
 natural0 = [0..]
 
--- "shaped" numbers
+-- triangular numbers - A000217
 triangular :: [Integer]
 triangular = [n * (n + 1) `div` 2 | n <- natural0]
 
+-- square numbers - A000290
 square :: [Integer]
 square = [n * n | n <- natural0]
 
+-- pentagonal numbers - A000326
 pentagonal :: [Integer]
 pentagonal = [n * (3 * n - 1) `div` 2 | n <- natural0]
 
--- Etc
+-- Fibonacci sequence - A000045
 fibonacci :: [Integer]
 fibonacci = 0 : 1 : zipSum fibonacci (tail fibonacci)
 
 factorial :: Integer -> Integer
-factorial n = rec n 1
-    where
-        rec 0 acc = acc
-        rec n acc = rec (n-1) (acc * n)
+factorial 0 = 1
+factorial n = product [1..n]
 
+-- lower factorial
+factorialL :: Integer -> Integer -> Integer
+factorialL n k = product [n-k+1 .. n]
+
+-- upper factorial
+factorialU :: Integer -> Integer -> Integer
+factorialU n k = product [n..n+k-1]
+
+-- combinations
 choose :: Integer -> Integer -> Integer
+choose n k = factorialL n k `div` factorial k
+
+-- permutations
+permute :: Integer -> Integer -> Integer
+permute = factorialL
 
 -- the nth row of pascal's triangle
-pascal :: Integer -> [Integer]
+pascalRow :: Integer -> [Integer]
+pascalRow n = map (choose n) [0..n]
 
+-- Pascal's triangle, iterated row by row - A007318
+pascal :: [Integer]
+pascal = natural >>= pascalRow
+
+-- Catalan numbers - A000108
+catalan :: [Integer]
+catalan = [(2*n) `choose` n - (2*n) `choose` (n+1) | n <- natural0]
 
 -- All powers of n
 powers :: Integer -> [Integer]
 powers n = iterate (*n) 1
 
--- All prime numbers in increasing order
+-- All prime numbers - A000040
 primes :: [Integer]
 primes = sieve [2..]
     where
@@ -85,7 +107,7 @@ smooth n = mergeFactors $ primesTo n
                 -- merges a sorted stream with itself multiplied by some power of n
                 combine stream n = merge1 stream (map (* n) (combine stream n))
 
--- The Hamming Sequence, aka 5-smooth numbers
+-- The Hamming Sequence, aka 5-smooth numbers - A051037
 hamming :: [Integer]
 hamming = smooth 5
 
